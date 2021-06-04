@@ -1,45 +1,35 @@
-package com.azizbek.todolist.data;
+package com.azizbek.todolist.data
 
-import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
-import androidx.room.Query;
-import androidx.room.Update;
-
-import com.azizbek.todolist.model.Note;
-
-import java.util.List;
+import androidx.lifecycle.LiveData
+import androidx.room.*
+import com.azizbek.todolist.model.Note
 
 @Dao
-public interface NoteDao {
+interface NoteDao {
+    @Query("SELECT * FROM Note")
+    fun all(): List<Note?>?
 
     @Query("SELECT * FROM Note")
-    List<Note> getAll();
-
-    @Query("SELECT * FROM Note")
-    LiveData<List<Note>> getAllLiveData();
+    fun allLiveData(): LiveData<List<Note>>
 
     @Query("SELECT * FROM Note WHERE uid IN (:noteIds)")
-    List<Note> loadAllByIds(int[] noteIds);
+    fun loadAllByIds(noteIds: IntArray?): List<Note>
 
     @Query("SELECT * FROM Note WHERE uid = :uid LIMIT 1")
-    Note findById(int uid);
+    fun findById(uid: Int): Note?
 
     @Query("SELECT * FROM Note WHERE done= 0 ")
-    LiveData<List<Note>> getAllProgressTasks();
+    fun allProgressTasks(): LiveData<List<Note>>
 
     @Query("SELECT * FROM Note WHERE done = 1 ")
-    LiveData<List<Note>> getAllCompletedTasks();
+    fun allCompletedTasks(): LiveData<List<Note>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Note note);
+    suspend fun insert(note: Note)
 
     @Update
-    void update(Note note);
+    suspend fun update(note: Note)
 
     @Delete
-    void delete(Note note);
-
+    suspend fun delete(note: Note)
 }

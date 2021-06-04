@@ -1,30 +1,25 @@
-package com.azizbek.todolist.screens.main;
+package com.azizbek.todolist.screens.main
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import com.azizbek.todolist.App
+import com.azizbek.todolist.data.NoteDao
+import com.azizbek.todolist.model.Note
+import com.azizbek.todolist.repository.ToDoRepository
 
-import com.azizbek.todolist.App;
-import com.azizbek.todolist.model.Note;
+class MainViewModel : ViewModel() {
+    private val toDoRepository:ToDoRepository
+    val noteLiveData: LiveData<List<Note>>
+    val progressTasks: LiveData<List<Note>>
+    val completedTasks: LiveData<List<Note>>
 
-import java.util.List;
-
-public class MainViewModel extends ViewModel {
-    private LiveData<List<Note>> noteLiveData = App.getInstance().getNoteDao().getAllLiveData();
-
-    public LiveData<List<Note>> getNoteLiveData() {
-        return noteLiveData;
+    init {
+        val noteDao=App.getInstance().noteDao
+        toDoRepository=ToDoRepository(noteDao)
+        noteLiveData=toDoRepository.allLiveData
+        progressTasks=toDoRepository.allProgressTasks
+        completedTasks=toDoRepository.allCompletedTasks
     }
 
-    private LiveData<List<Note>> progressTasks = App.getInstance().getNoteDao().getAllProgressTasks();
-
-    public LiveData<List<Note>> getProgressTasks() {
-        return progressTasks;
-    }
-
-    private LiveData<List<Note>> completedTasks = App.getInstance().getNoteDao().getAllCompletedTasks();
-
-    public LiveData<List<Note>> getCompletedTasks() {
-        return completedTasks;
-    }
 
 }
