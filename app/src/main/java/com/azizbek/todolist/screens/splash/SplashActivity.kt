@@ -1,29 +1,23 @@
-package com.azizbek.todolist.screens.splash;
+package com.azizbek.todolist.screens.splash
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
+import android.content.Intent
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import androidx.appcompat.app.AppCompatActivity
+import com.azizbek.todolist.R
+import com.azizbek.todolist.screens.main.MainActivity
+import java.util.*
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+class SplashActivity : AppCompatActivity() {
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_splash)
+        Objects.requireNonNull(supportActionBar)!!.hide()
 
-import com.azizbek.todolist.R;
-import com.azizbek.todolist.screens.main.MainActivity;
-
-import java.util.Objects;
-
-public class SplashActivity extends AppCompatActivity {
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-        Objects.requireNonNull(getSupportActionBar()).hide();
-
-        new Handler().postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, MainActivity.class));
-            finish();
-        }, 2000);
-
+        Handler(Looper.getMainLooper()).postDelayed({
+            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            finish()
+        }, 2000)
     }
 }

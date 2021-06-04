@@ -2,27 +2,36 @@ package com.azizbek.todolist.screens.details
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.format.DateFormat.is24HourFormat
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.azizbek.todolist.App
 import com.azizbek.todolist.R
 import com.azizbek.todolist.model.Note
-import java.text.SimpleDateFormat
 import java.util.*
 
-class NoteDetailsActivity : AppCompatActivity() {
+class NoteDetailsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private var note: Note? = null
     private var titleText: EditText? = null
     private var description: EditText? = null
     private var installTime: TextView? = null
+    var day = 0
+    var month: Int = 0
+    var year: Int = 0
+    var hour: Int = 0
+    var minute: Int = 0
+    var myDay = 0
+    var myMonth: Int = 0
+    var myYear: Int = 0
+    var myHour: Int = 0
+    var myMinute: Int = 0
 
     @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,14 +57,13 @@ class NoteDetailsActivity : AppCompatActivity() {
             note = Note()
         }
         installTime?.setOnClickListener {
-            val cal = Calendar.getInstance()
-            val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-                cal.set(Calendar.HOUR_OF_DAY, hour)
-                cal.set(Calendar.MINUTE, minute)
-                installTime!!.text = SimpleDateFormat("HH:mm").format(cal.time).toString()
-            }
-            TimePickerDialog(this, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
-
+            val calendar: Calendar = Calendar.getInstance()
+            day = calendar.get(Calendar.DAY_OF_MONTH)
+            month = calendar.get(Calendar.MONTH)
+            year = calendar.get(Calendar.YEAR)
+            val datePickerDialog =
+                DatePickerDialog(this@NoteDetailsActivity, this@NoteDetailsActivity, year, month,day)
+            datePickerDialog.show()
         }
     }
 
@@ -100,5 +108,33 @@ class NoteDetailsActivity : AppCompatActivity() {
             }
             caller.startActivity(intent)
         }
+    }
+
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        myDay = day
+        myYear = year
+        myMonth = month
+        val calendar: Calendar = Calendar.getInstance()
+        hour = calendar.get(Calendar.HOUR)
+        minute = calendar.get(Calendar.MINUTE)
+        val timePickerDialog = TimePickerDialog(this@NoteDetailsActivity, this@NoteDetailsActivity, hour, minute,
+            is24HourFormat(this)
+        )
+        timePickerDialog.show()
+    }
+
+    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+        myHour = hourOfDay
+        myMinute = minute
+        if (hour / 10 == 0&& minute/10==0) {
+            installTime?.text = "$myDay/$myMonth/$myYear - 0"+"$hourOfDay:"+ "0"+"$minute"
+        } else if (minute / 10 == 0) {
+            installTime?.text = "$myDay/$myMonth/$myYear - $hourOfDay:"+"0"+"$minute"
+        } else if (hourOfDay / 10 == 0) {
+            installTime?.text = "$myDay/$myMonth/$myYear - 0" + "$hourOfDay:" + "$minute"
+        } else {
+            installTime?.text = "$myDay/$myMonth/$myYear - $hourOfDay:$minute"
+        }
+
     }
 }

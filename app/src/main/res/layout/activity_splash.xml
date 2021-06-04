@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-        android:layout_margin="20dp"
+        android:layout_margin="40dp"
         app:lottie_rawRes="@raw/todolottie"/>
     <TextView
         app:layout_constraintEnd_toEndOf="parent"

@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,8 +35,7 @@ class ProgressFragment : Fragment() {
         recyclerView?.adapter = adapter
 
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        mainViewModel.progressTasks.observe(requireActivity(), {
-                notes: List<Note?>? -> adapter.setItems(notes)
+        mainViewModel.progressTasks.observe(requireActivity(), { notes: List<Note?>? -> adapter.setItems(notes)
         })
 
     }
