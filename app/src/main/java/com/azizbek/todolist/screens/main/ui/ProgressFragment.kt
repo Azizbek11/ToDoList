@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.azizbek.todolist.R
 import com.azizbek.todolist.model.Note
 import com.azizbek.todolist.screens.main.Adapter
-import com.azizbek.todolist.screens.main.MainViewModel
+import com.azizbek.todolist.viewmodel.MainViewModel
 
 class ProgressFragment : Fragment() {
     private var recyclerView:RecyclerView?=null
@@ -31,11 +31,11 @@ class ProgressFragment : Fragment() {
         val linearLayoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
         recyclerView?.layoutManager = linearLayoutManager
         recyclerView?.addItemDecoration(DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL))
+        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         val adapter = Adapter()
         recyclerView?.adapter = adapter
 
-        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        mainViewModel.progressTasks.observe(requireActivity(), { notes: List<Note?>? -> adapter.setItems(notes)
+        mainViewModel.progressedTasks.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
         })
 
     }

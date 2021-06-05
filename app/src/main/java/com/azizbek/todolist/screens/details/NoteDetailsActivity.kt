@@ -12,9 +12,11 @@ import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import com.azizbek.todolist.App
 import com.azizbek.todolist.R
 import com.azizbek.todolist.model.Note
+import com.azizbek.todolist.viewmodel.MainViewModel
 import java.util.*
 
 class NoteDetailsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -32,10 +34,13 @@ class NoteDetailsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
     var myYear: Int = 0
     var myHour: Int = 0
     var myMinute: Int = 0
+    var mainViewModel: MainViewModel?=null
 
     @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         setContentView(R.layout.activity_note_details)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -86,9 +91,9 @@ class NoteDetailsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
                     note!!.date = installTime!!.text.toString()
                 }
                 if (intent.hasExtra(EXTRA_NOTE)) {
-                    App.getInstance().noteDao.update(note)
+                    App.getInstance().noteDao.update(note!!)
                 } else {
-                    App.getInstance().noteDao.insert(note)
+                    App.getInstance().noteDao.insert(note!!)
                 }
                 finish()
             } else {

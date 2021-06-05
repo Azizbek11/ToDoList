@@ -12,17 +12,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.azizbek.todolist.R
 import com.azizbek.todolist.model.Note
 import com.azizbek.todolist.screens.main.Adapter
-import com.azizbek.todolist.screens.main.MainViewModel
+import com.azizbek.todolist.viewmodel.MainViewModel
 
 class AllTasksFragment : Fragment() {
     private var recyclerView:RecyclerView?=null
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val root= inflater.inflate(R.layout.fragment_all, container, false)
-        // Inflate the layout for this fragment
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         recyclerView = root.findViewById(R.id.list)
         return root
     }
@@ -30,14 +31,15 @@ class AllTasksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
         val linearLayoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
         recyclerView?.layoutManager = linearLayoutManager
         recyclerView?.addItemDecoration(DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL))
         val adapter = Adapter()
         recyclerView?.adapter = adapter
 
-        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        mainViewModel.noteLiveData.observe(requireActivity(), { notes: List<Note?>? -> adapter.setItems(notes)
+        mainViewModel.noteLiveData.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
         })
     }
 }
