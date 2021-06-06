@@ -33,10 +33,10 @@ class CompletedFragment : Fragment() {
         recyclerView?.layoutManager = linearLayoutManager
         recyclerView?.addItemDecoration(DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL))
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        val adapter = Adapter()
+        val adapter = Adapter(mainViewModel)
         recyclerView?.adapter = adapter
 
-        mainViewModel.completedTasks?.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
+        mainViewModel.completedTasks.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
         })
     }
 }

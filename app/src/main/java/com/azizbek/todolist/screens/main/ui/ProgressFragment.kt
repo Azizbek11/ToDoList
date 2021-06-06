@@ -32,10 +32,10 @@ class ProgressFragment : Fragment() {
         recyclerView?.layoutManager = linearLayoutManager
         recyclerView?.addItemDecoration(DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL))
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        val adapter = Adapter()
+        val adapter = Adapter(mainViewModel)
         recyclerView?.adapter = adapter
 
-        mainViewModel.progressedTasks?.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
+        mainViewModel.progressedTasks.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
         })
 
     }

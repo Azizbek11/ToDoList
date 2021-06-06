@@ -30,16 +30,13 @@ class AllTasksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-
         val linearLayoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
         recyclerView?.layoutManager = linearLayoutManager
         recyclerView?.addItemDecoration(DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL))
-        val adapter = Adapter()
+        val adapter = Adapter(mainViewModel)
         recyclerView?.adapter = adapter
 
-        mainViewModel.noteLiveData?.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
+        mainViewModel.noteLiveData.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
         })
     }
 }

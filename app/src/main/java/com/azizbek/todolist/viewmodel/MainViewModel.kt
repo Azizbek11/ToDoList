@@ -1,13 +1,28 @@
 package com.azizbek.todolist.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.azizbek.todolist.App
 import com.azizbek.todolist.data.NoteDao
 import com.azizbek.todolist.model.Note
+import com.azizbek.todolist.repository.Repository
+import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
-    val noteLiveData = App.instance?.noteDao?.allLiveData()
-    val completedTasks = App.instance?.noteDao?.allCompletedTasks()
-    val progressedTasks = App.instance?.noteDao?.allProgressTasks()
-    val noteDao=App.instance?.noteDao
+    private val repository:Repository = Repository(App.instance?.noteDao!!)
+    val noteLiveData: LiveData<List<Note>> = repository.noteLiveData
+    val progressedTasks:LiveData<List<Note>> = repository.progressedTasks
+    val completedTasks: LiveData<List<Note>> = repository.completedTasks
+
+
+    fun insert(note: Note)=viewModelScope.launch{
+        repository.insert(note)
+    }
+    fun update(note: Note)=viewModelScope.launch{
+        repository.update(note)
+    }
+    fun delete(note: Note)=viewModelScope.launch{
+        repository.delete(note)
+    }
 }

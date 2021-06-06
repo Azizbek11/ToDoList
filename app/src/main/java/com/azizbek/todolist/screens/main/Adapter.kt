@@ -18,8 +18,10 @@ import com.azizbek.todolist.R
 import com.azizbek.todolist.model.Note
 import com.azizbek.todolist.screens.details.NoteDetailsActivity.Companion.start
 import com.azizbek.todolist.screens.main.Adapter.NoteViewHolder
+import com.azizbek.todolist.viewmodel.MainViewModel
 
-class Adapter : RecyclerView.Adapter<NoteViewHolder>() {
+class Adapter(val mainViewModel: MainViewModel) : RecyclerView.Adapter<NoteViewHolder>() {
+
     private val sortedList: SortedList<Note> = SortedList(Note::class.java, object : SortedList.Callback<Note>() {
         override fun compare(o1: Note, o2: Note): Int {
             if (!o2.done && o1.done) {
@@ -36,7 +38,7 @@ class Adapter : RecyclerView.Adapter<NoteViewHolder>() {
 
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
-            return oldItem.equals(newItem)
+            return oldItem == newItem
         }
 
         override fun areItemsTheSame(item1: Note, item2: Note): Boolean {
@@ -58,7 +60,8 @@ class Adapter : RecyclerView.Adapter<NoteViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         return NoteViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_note_list, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_note_list, parent, false),
+            mainViewModel
         )
     }
 
@@ -74,7 +77,7 @@ class Adapter : RecyclerView.Adapter<NoteViewHolder>() {
         sortedList.replaceAll(notes!!)
     }
 
-    class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class NoteViewHolder(itemView: View, mainViewModel: MainViewModel) : RecyclerView.ViewHolder(itemView) {
         var title: TextView = itemView.findViewById(R.id.title_text)
         var time: TextView = itemView.findViewById(R.id.time)
         private var completed: CheckBox = itemView.findViewById(R.id.completed)
@@ -107,14 +110,14 @@ class Adapter : RecyclerView.Adapter<NoteViewHolder>() {
                 )
             }
             delete.setOnClickListener {
-                App.instance?.noteDao?.delete(
+               mainViewModel.delete(
                     note!!
                 )
             }
             completed.setOnCheckedChangeListener { _: CompoundButton?, checked: Boolean ->
                 if (!silentUpdate) {
                     note!!.done = checked
-                    App.instance?.noteDao?.update(note!!)
+                    mainViewModel.update(note!!)
                 }
                 updateStrokeOut()
             }
