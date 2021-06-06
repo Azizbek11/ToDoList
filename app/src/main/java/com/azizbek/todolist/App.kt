@@ -15,7 +15,6 @@ class App : Application() {
             applicationContext,
             AppDatabase::class.java, "app-db-name"
         )
-            .allowMainThreadQueries()
             .build()
         noteDao = database!!.noteDao()!!
     }

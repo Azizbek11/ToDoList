@@ -20,7 +20,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Title"
+            android:text="Заголовок"
             android:textSize="20sp"
             android:textColor="#000"/>
         <EditText
@@ -42,7 +42,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Description"
+            android:text="Описание"
             android:textSize="20sp"
             android:textColor="#000"/>
         <EditText
@@ -64,7 +64,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Time"
+            android:text="Время"
             android:textSize="20sp"
             android:textColor="#000"/>
         <TextView
@@ -73,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="50dp"
-            android:text="Install time"
+            android:text="Время установки"
             android:drawablePadding="20dp"
             android:drawableStart="@drawable/ic_baseline_access_time_24"
             android:gravity="top"
