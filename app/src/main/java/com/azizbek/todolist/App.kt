@@ -1,50 +1,27 @@
-package com.azizbek.todolist;
+package com.azizbek.todolist
 
-import android.app.Application;
+import android.app.Application
+import androidx.room.Room
+import com.azizbek.todolist.data.AppDatabase
+import com.azizbek.todolist.data.NoteDao
 
-import androidx.room.Room;
-
-import com.azizbek.todolist.data.AppDatabase;
-import com.azizbek.todolist.data.NoteDao;
-
-public class App extends Application {
-
-    private AppDatabase database;
-    private NoteDao noteDao;
-
-    private static App instance;
-
-    public static App getInstance() {
-        return instance;
+class App : Application() {
+    var database: AppDatabase? = null
+    var noteDao: NoteDao? = null
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
+        database = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java, "app-db-name"
+        )
+            .allowMainThreadQueries()
+            .build()
+        noteDao = database!!.noteDao()!!
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        instance = this;
-
-        database = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "app-db-name")
-                .allowMainThreadQueries()
-                .build();
-
-        noteDao = database.noteDao();
-    }
-
-    public AppDatabase getDatabase() {
-        return database;
-    }
-
-    public void setDatabase(AppDatabase database) {
-        this.database = database;
-    }
-
-    public NoteDao getNoteDao() {
-        return noteDao;
-    }
-
-    public void setNoteDao(NoteDao noteDao) {
-        this.noteDao = noteDao;
+    companion object {
+        var instance: App? = null
+            private set
     }
 }

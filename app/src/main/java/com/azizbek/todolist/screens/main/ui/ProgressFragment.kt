@@ -35,7 +35,7 @@ class ProgressFragment : Fragment() {
         val adapter = Adapter()
         recyclerView?.adapter = adapter
 
-        mainViewModel.progressedTasks.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
+        mainViewModel.progressedTasks?.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
         })
 
     }

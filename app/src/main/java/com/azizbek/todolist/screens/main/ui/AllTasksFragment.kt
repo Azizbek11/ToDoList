@@ -39,7 +39,7 @@ class AllTasksFragment : Fragment() {
         val adapter = Adapter()
         recyclerView?.adapter = adapter
 
-        mainViewModel.noteLiveData.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
+        mainViewModel.noteLiveData?.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
         })
     }
 }

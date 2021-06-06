@@ -91,9 +91,9 @@ class NoteDetailsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
                     note!!.date = installTime!!.text.toString()
                 }
                 if (intent.hasExtra(EXTRA_NOTE)) {
-                    App.getInstance().noteDao.update(note!!)
+                   mainViewModel?.noteDao?.update(note!!)
                 } else {
-                    App.getInstance().noteDao.insert(note!!)
+                    mainViewModel?.noteDao?.insert(note!!)
                 }
                 finish()
             } else {

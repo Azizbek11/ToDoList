@@ -1,153 +1,124 @@
-package com.azizbek.todolist.screens.main;
+package com.azizbek.todolist.screens.main
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.os.Build;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.TextView;
+import android.app.Activity
+import android.graphics.Color
+import android.graphics.Paint
+import android.os.Build
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.CompoundButton
+import android.widget.TextView
+import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SortedList
+import com.azizbek.todolist.App
+import com.azizbek.todolist.R
+import com.azizbek.todolist.model.Note
+import com.azizbek.todolist.screens.details.NoteDetailsActivity.Companion.start
+import com.azizbek.todolist.screens.main.Adapter.NoteViewHolder
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SortedList;
-
-import com.azizbek.todolist.App;
-import com.azizbek.todolist.R;
-import com.azizbek.todolist.model.Note;
-import com.azizbek.todolist.screens.details.NoteDetailsActivity;
-
-import java.util.List;
-
-public class Adapter extends RecyclerView.Adapter<Adapter.NoteViewHolder> {
-
-    private SortedList<Note> sortedList;
-
-    public Adapter() {
-
-        sortedList = new SortedList<>(Note.class, new SortedList.Callback<Note>() {
-            @Override
-            public int compare(Note o1, Note o2) {
-                if (!o2.done && o1.done) {
-                    return 1;
-                }
-                if (o2.done && !o1.done) {
-                    return -1;
-                }
-                return (int) (o2.timestamp - o1.timestamp);
+class Adapter : RecyclerView.Adapter<NoteViewHolder>() {
+    private val sortedList: SortedList<Note> = SortedList(Note::class.java, object : SortedList.Callback<Note>() {
+        override fun compare(o1: Note, o2: Note): Int {
+            if (!o2.done && o1.done) {
+                return 1
             }
-
-            @Override
-            public void onChanged(int position, int count) {
-                notifyItemRangeChanged(position, count);
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public boolean areContentsTheSame(Note oldItem, Note newItem) {
-                return oldItem.equals(newItem);
-            }
-
-            @Override
-            public boolean areItemsTheSame(Note item1, Note item2) {
-                return item1.uid == item2.uid;
-            }
-
-            @Override
-            public void onInserted(int position, int count) {
-                notifyItemRangeInserted(position, count);
-            }
-
-            @Override
-            public void onRemoved(int position, int count) {
-                notifyItemRangeRemoved(position, count);
-            }
-
-            @Override
-            public void onMoved(int fromPosition, int toPosition) {
-                notifyItemMoved(fromPosition, toPosition);
-            }
-        });
-    }
-
-    @NonNull
-    @Override
-    public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new NoteViewHolder(
-                LayoutInflater.from(parent.getContext()).inflate(R.layout.item_note_list, parent, false));
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
-        holder.bind(sortedList.get(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return sortedList.size();
-    }
-
-    public void setItems(List<Note> notes) {
-        sortedList.replaceAll(notes);
-    }
-
-
-    static class NoteViewHolder extends RecyclerView.ViewHolder {
-
-        TextView title;
-        TextView time;
-        CheckBox completed;
-        View delete;
-
-        Note note;
-
-        boolean silentUpdate;
-
-        public NoteViewHolder(@NonNull final View itemView) {
-            super(itemView);
-
-            title = itemView.findViewById(R.id.title_text);
-            time = itemView.findViewById(R.id.time);
-            completed = itemView.findViewById(R.id.completed);
-            delete = itemView.findViewById(R.id.delete);
-
-            itemView.setOnClickListener(
-                    view -> NoteDetailsActivity.start((Activity) itemView.getContext(), note));
-
-            delete.setOnClickListener(view -> App.getInstance().getNoteDao().delete(note));
-
-            completed.setOnCheckedChangeListener((compoundButton, checked) -> {
-                if (!silentUpdate) {
-                    note.done = checked;
-                    App.getInstance().getNoteDao().update(note);
-                }
-                updateStrokeOut();
-            });
-
+            return if (o2.done && !o1.done) {
+                -1
+            } else (o2.timestamp - o1.timestamp).toInt()
         }
 
-        public void bind(Note note) {
-            this.note = note;
-
-            title.setText(note.getTitle());
-            time.setText(note.date);
-            updateStrokeOut();
-
-            silentUpdate = true;
-            completed.setChecked(note.done);
-            silentUpdate = false;
+        override fun onChanged(position: Int, count: Int) {
+            notifyItemRangeChanged(position, count)
         }
 
-        private void updateStrokeOut() {
-            if (note.done) {
-                title.setPaintFlags(title.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                title.setTextColor(Color.GRAY);
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
+            return oldItem.equals(newItem)
+        }
+
+        override fun areItemsTheSame(item1: Note, item2: Note): Boolean {
+            return item1.uid == item2.uid
+        }
+
+        override fun onInserted(position: Int, count: Int) {
+            notifyItemRangeInserted(position, count)
+        }
+
+        override fun onRemoved(position: Int, count: Int) {
+            notifyItemRangeRemoved(position, count)
+        }
+
+        override fun onMoved(fromPosition: Int, toPosition: Int) {
+            notifyItemMoved(fromPosition, toPosition)
+        }
+    })
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
+        return NoteViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_note_list, parent, false)
+        )
+    }
+
+    override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
+        holder.bind(sortedList[position])
+    }
+
+    override fun getItemCount(): Int {
+        return sortedList.size()
+    }
+
+    fun setItems(notes: List<Note>?) {
+        sortedList.replaceAll(notes!!)
+    }
+
+    class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var title: TextView = itemView.findViewById(R.id.title_text)
+        var time: TextView = itemView.findViewById(R.id.time)
+        private var completed: CheckBox = itemView.findViewById(R.id.completed)
+        private var delete: View = itemView.findViewById(R.id.delete)
+        var note: Note? = null
+        private var silentUpdate = false
+        fun bind(note: Note) {
+            this.note = note
+            title.text = note.title
+            time.text = note.date
+            updateStrokeOut()
+            silentUpdate = true
+            completed.isChecked = note.done
+            silentUpdate = false
+        }
+
+        private fun updateStrokeOut() {
+            if (note!!.done) {
+                title.paintFlags = title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                title.setTextColor(Color.GRAY)
             } else {
-                title.setPaintFlags(title.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+                title.paintFlags = title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+            }
+        }
+
+        init {
+            itemView.setOnClickListener {
+                start(
+                    (itemView.context as Activity), note
+                )
+            }
+            delete.setOnClickListener {
+                App.instance?.noteDao?.delete(
+                    note!!
+                )
+            }
+            completed.setOnCheckedChangeListener { _: CompoundButton?, checked: Boolean ->
+                if (!silentUpdate) {
+                    note!!.done = checked
+                    App.instance?.noteDao?.update(note!!)
+                }
+                updateStrokeOut()
             }
         }
     }
+
 }
