@@ -12,6 +12,7 @@ import java.util.*
 
 @Entity
 open class Note : Parcelable {
+
     @JvmField
     @PrimaryKey(autoGenerate = true)
     var uid = 0

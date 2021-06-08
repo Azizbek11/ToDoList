@@ -20,7 +20,7 @@ import com.azizbek.todolist.screens.details.NoteDetailsActivity.Companion.start
 import com.azizbek.todolist.screens.main.Adapter.NoteViewHolder
 import com.azizbek.todolist.viewmodel.MainViewModel
 
-class Adapter(val mainViewModel: MainViewModel) : RecyclerView.Adapter<NoteViewHolder>() {
+class Adapter(private val mainViewModel: MainViewModel) : RecyclerView.Adapter<NoteViewHolder>() {
 
     private val sortedList: SortedList<Note> = SortedList(Note::class.java, object : SortedList.Callback<Note>() {
         override fun compare(o1: Note, o2: Note): Int {
@@ -83,15 +83,13 @@ class Adapter(val mainViewModel: MainViewModel) : RecyclerView.Adapter<NoteViewH
         private var completed: CheckBox = itemView.findViewById(R.id.completed)
         private var delete: View = itemView.findViewById(R.id.delete)
         var note: Note? = null
-        private var silentUpdate = false
+
+
         fun bind(note: Note) {
             this.note = note
             title.text = note.title
             time.text = note.date
-            updateStrokeOut()
-            silentUpdate = true
             completed.isChecked = note.done
-            silentUpdate = false
         }
 
         private fun updateStrokeOut() {
@@ -100,6 +98,7 @@ class Adapter(val mainViewModel: MainViewModel) : RecyclerView.Adapter<NoteViewH
                 title.setTextColor(Color.GRAY)
             } else {
                 title.paintFlags = title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                title.setTextColor(Color.BLACK)
             }
         }
 
@@ -115,11 +114,10 @@ class Adapter(val mainViewModel: MainViewModel) : RecyclerView.Adapter<NoteViewH
                 )
             }
             completed.setOnCheckedChangeListener { _: CompoundButton?, checked: Boolean ->
-                if (!silentUpdate) {
-                    note!!.done = checked
-                    mainViewModel.update(note!!)
-                }
-                updateStrokeOut()
+
+              note!!.done = checked
+              mainViewModel.update(note!!)
+              updateStrokeOut()
             }
         }
     }

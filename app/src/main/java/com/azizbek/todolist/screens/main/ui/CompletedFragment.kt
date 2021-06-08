@@ -13,28 +13,26 @@ import com.azizbek.todolist.R
 import com.azizbek.todolist.model.Note
 import com.azizbek.todolist.screens.main.Adapter
 import com.azizbek.todolist.viewmodel.MainViewModel
+import kotlinx.android.synthetic.main.fragment_did.*
 
 class CompletedFragment : Fragment() {
 
-    private var recyclerView:RecyclerView?=null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root= inflater.inflate(R.layout.fragment_did, container, false)
-        recyclerView = root.findViewById(R.id.completedTasks)
-        return root
+        return inflater.inflate(R.layout.fragment_did, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val linearLayoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
-        recyclerView?.layoutManager = linearLayoutManager
-        recyclerView?.addItemDecoration(DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL))
+        completedTasks.layoutManager = linearLayoutManager
+        completedTasks.addItemDecoration(DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL))
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         val adapter = Adapter(mainViewModel)
-        recyclerView?.adapter = adapter
+        completedTasks.adapter = adapter
 
         mainViewModel.completedTasks.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
         })

@@ -17,12 +17,11 @@ import com.azizbek.todolist.screens.main.ui.CompletedFragment
 import com.azizbek.todolist.screens.main.ui.ProgressFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    var topTextView: TextView? = null
-    var isPressed=false
-    var locPosition = 0
-    var fab: FloatingActionButton?=null
+    private var isPressed=false
+    private var locPosition = 0
 
 
 
@@ -34,10 +33,8 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView=findViewById(R.id.bottom_nav)
 
         getFragment(1, AllTasksFragment())
-        topTextView=findViewById(R.id.topTextView)
-        fab = findViewById(R.id.fab)
-        fab?.visibility= View.VISIBLE
-        fab?.setOnClickListener { NoteDetailsActivity.start(this@MainActivity, null) }
+        fab.visibility= View.VISIBLE
+        fab.setOnClickListener { NoteDetailsActivity.start(this@MainActivity, null) }
         controlBottomView()
     }
 
@@ -47,17 +44,17 @@ class MainActivity : AppCompatActivity() {
                 R.id.total -> {
                     topTextView?.text = "Все задачи"
                     getFragment(1, AllTasksFragment())
-                    fab?.visibility= View.VISIBLE
+                    fab.visibility= View.VISIBLE
                 }
                 R.id.progress -> {
                     topTextView?.text = "В прогрессе"
                     getFragment(2, ProgressFragment())
-                    fab?.visibility= View.GONE
+                    fab.visibility= View.GONE
                 }
                 R.id.did -> {
                     topTextView?.text = "Выполненные задачи"
                     getFragment(3, CompletedFragment())
-                    fab?.visibility= View.GONE
+                    fab.visibility= View.GONE
                 }
             }
             true
@@ -86,8 +83,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getFragment(position:Int,fragment: androidx.fragment.app.Fragment) {
-
-
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
 
         if (position>locPosition) {

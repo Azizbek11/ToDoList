@@ -10,20 +10,18 @@ import android.text.format.DateFormat.is24HourFormat
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
-import com.azizbek.todolist.App
 import com.azizbek.todolist.R
+import com.azizbek.todolist.databinding.ActivityMainBinding
+import com.azizbek.todolist.databinding.ActivityNoteDetailsBinding
 import com.azizbek.todolist.model.Note
 import com.azizbek.todolist.viewmodel.MainViewModel
 import java.util.*
 
 class NoteDetailsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
-    private var note: Note? = null
-    private var titleText: EditText? = null
-    private var description: EditText? = null
-    private var installTime: TextView? = null
     private var day = 0
     private var month: Int = 0
     private var year: Int = 0
@@ -32,9 +30,10 @@ class NoteDetailsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
     private var myDay = 0
     private var myMonth: Int = 0
     private var myYear: Int = 0
-    private var myHour: Int = 0
-    private var myMinute: Int = 0
     private var mainViewModel: MainViewModel?=null
+    private lateinit var binding:ActivityNoteDetailsBinding
+    private var note: Note? = null
+    private var myData=""
 
     @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,35 +41,73 @@ class NoteDetailsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
 
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        setContentView(R.layout.activity_note_details)
+        binding = ActivityNoteDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         Objects.requireNonNull(supportActionBar)!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeButtonEnabled(true)
         title = getString(R.string.note_details_title)
-        titleText = findViewById(R.id.title)
-        description = findViewById(R.id.description)
-        installTime=findViewById(R.id.installTime)
 
         if (intent.hasExtra(EXTRA_NOTE)) {
             note = intent.getParcelableExtra(EXTRA_NOTE)
-            titleText?.setText(note!!.title)
-            description?.setText(note!!.description)
-            installTime?.text = note!!.date
-            Toast.makeText(this,note!!.date.toString(),Toast.LENGTH_SHORT).show()
+            binding.title.setText(note!!.title)
+            binding.description.setText(note!!.description)
+            binding.installTime.text = note!!.date
+            val text= binding.installTime.text.toString()
+            if (text.isNotEmpty()) {
+                getData(text)
+            }
+
         } else {
             note = Note()
         }
-        installTime?.setOnClickListener {
+        binding.installTime.setOnClickListener {
+            if (myData.isEmpty()) {
             val calendar: Calendar = Calendar.getInstance()
             day = calendar.get(Calendar.DAY_OF_MONTH)
             month = calendar.get(Calendar.MONTH)
             year = calendar.get(Calendar.YEAR)
+            }
             val datePickerDialog =
                 DatePickerDialog(this@NoteDetailsActivity, this@NoteDetailsActivity, year, month,day)
             datePickerDialog.show()
         }
+
     }
+
+    private fun getData(text: String) {
+
+        myData= text.substring(0,text.indexOf("-"))
+
+             when(myData.indexOf("/")){
+                    1-> {
+                        day = myData.substring(0, 1).toInt()
+                        when(myData.indexOf("/",2)){
+                            3->{
+                                month=myData.substring(2,3).toInt()-1
+                            }
+                            4->{
+                                month=myData.substring(2,4).toInt()-1
+                            }
+                        }
+                    }
+                    2->{
+                        day = myData.substring(0, 2).toInt()
+                        when(myData.indexOf("/",3)){
+                            4->{
+                                month=myData.substring(3,4).toInt()-1
+                            }
+                            5->{
+                                month=myData.substring(3,5).toInt()-1
+                            }
+                        }
+                    }
+                }
+             year = myData.substring(myData.length - 5, myData.length - 1).toInt()
+
+
+            }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_details, menu)
@@ -82,22 +119,22 @@ class NoteDetailsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> finish()
-            R.id.action_save -> if (titleText!!.text.isNotEmpty()) {
-                note!!.title = titleText!!.text.toString()
-                note!!.description = description!!.text.toString()
+            R.id.action_save -> if (binding.title.text.isNotEmpty()) {
+                note!!.title = binding.title.text.toString()
+                note!!.description = binding.description.text.toString()
                 note!!.done = false
                 note!!.timestamp = System.currentTimeMillis()
-                if (installTime!!.text.toString() != "Install time") {
-                    note!!.date = installTime!!.text.toString()
+                if (binding.installTime.text.toString() != "Время установки") {
+                    note!!.date = binding.installTime.text.toString()
                 }
                 if (intent.hasExtra(EXTRA_NOTE)) {
-                   mainViewModel?.update(note!!)
+                    mainViewModel?.update(note!!)
                 } else {
                     mainViewModel?.insert(note!!)
                 }
                 finish()
             } else {
-                Toast.makeText(this,"Title cant empty",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"Название не может быть пустым",Toast.LENGTH_SHORT).show()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -116,9 +153,9 @@ class NoteDetailsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        myDay = day
         myYear = year
         myMonth = month
+        myDay = dayOfMonth
         val calendar: Calendar = Calendar.getInstance()
         hour = calendar.get(Calendar.HOUR)
         minute = calendar.get(Calendar.MINUTE)
@@ -128,17 +165,19 @@ class NoteDetailsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
         timePickerDialog.show()
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        myHour = hourOfDay
-        myMinute = minute
-        if (hour / 10 == 0&& minute/10==0) {
-            installTime?.text = "$myDay/$myMonth/$myYear - 0"+"$hourOfDay:"+ "0"+"$minute"
-        } else if (minute / 10 == 0) {
-            installTime?.text = "$myDay/$myMonth/$myYear - $hourOfDay:"+"0"+"$minute"
-        } else if (hourOfDay / 10 == 0) {
-            installTime?.text = "$myDay/$myMonth/$myYear - 0" + "$hourOfDay:" + "$minute"
-        } else {
-            installTime?.text = "$myDay/$myMonth/$myYear - $hourOfDay:$minute"
+
+        when {
+            minute/10==0 -> {
+                binding.installTime.text = "$myDay/${myMonth+1}/$myYear - $hourOfDay:0$minute"
+            }
+            hourOfDay / 10 == 0 -> {
+                binding.installTime.text = "$myDay/${myMonth+1}/$myYear - 0$hourOfDay:$minute"
+            }
+            else -> {
+                binding.installTime.text = "$myDay/${myMonth+1}/$myYear - $hourOfDay:$minute"
+            }
         }
 
     }
