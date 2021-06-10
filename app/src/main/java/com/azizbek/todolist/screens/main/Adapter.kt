@@ -23,6 +23,7 @@ import com.azizbek.todolist.viewmodel.MainViewModel
 class Adapter(private val mainViewModel: MainViewModel) : RecyclerView.Adapter<NoteViewHolder>() {
 
     private val sortedList: SortedList<Note> = SortedList(Note::class.java, object : SortedList.Callback<Note>() {
+
         override fun compare(o1: Note, o2: Note): Int {
             if (!o2.done && o1.done) {
                 return 1

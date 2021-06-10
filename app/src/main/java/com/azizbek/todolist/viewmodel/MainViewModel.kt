@@ -7,7 +7,9 @@ import com.azizbek.todolist.App
 import com.azizbek.todolist.data.NoteDao
 import com.azizbek.todolist.model.Note
 import com.azizbek.todolist.repository.Repository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainViewModel : ViewModel() {
     private val repository:Repository = Repository(App.instance?.noteDao!!)
@@ -19,10 +21,13 @@ class MainViewModel : ViewModel() {
     fun insert(note: Note)=viewModelScope.launch{
         repository.insert(note)
     }
+
     fun update(note: Note)=viewModelScope.launch{
         repository.update(note)
     }
-    fun delete(note: Note)=viewModelScope.launch{
+
+    fun delete(note: Note)= viewModelScope.launch{
         repository.delete(note)
     }
+
 }

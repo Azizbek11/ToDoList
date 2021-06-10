@@ -13,27 +13,45 @@ import com.azizbek.todolist.R
 import com.azizbek.todolist.model.Note
 import com.azizbek.todolist.screens.main.Adapter
 import com.azizbek.todolist.viewmodel.MainViewModel
-import kotlinx.android.synthetic.main.fragment_progress.*
 
-class ProgressFragment : Fragment() {
+open class MyBaseFragment(private val layout:Int, private val recyclerViewId: Int):Fragment(){
+
+    private var recyclerView:RecyclerView?=null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_progress, container, false)
+
+        val root= inflater.inflate(layout, container, false)
+        recyclerView = root.findViewById(recyclerViewId)
+        return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val linearLayoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
-        progressTasks.layoutManager = linearLayoutManager
-        progressTasks.addItemDecoration(DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL))
+        recyclerView?.layoutManager = linearLayoutManager
+        recyclerView?.addItemDecoration(DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL))
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         val adapter = Adapter(mainViewModel)
-        progressTasks.adapter = adapter
+        recyclerView?.adapter = adapter
 
-        mainViewModel.progressedTasks.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
-        })
+        when(layout){
+            R.layout.fragment_all->{
+                mainViewModel.noteLiveData.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
+                })
+            }
+            R.layout.fragment_did->{
+                mainViewModel.completedTasks.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
+                })
+            }
+            R.layout.fragment_progress->{
+                mainViewModel.progressedTasks.observe(requireActivity(), { notes: List<Note> -> adapter.setItems(notes)
+                })
+            }
+        }
+
     }
+
 }

@@ -35,7 +35,6 @@ class NoteDetailsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
     private var note: Note? = null
     private var myData=""
 
-    @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -50,18 +49,22 @@ class NoteDetailsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
         title = getString(R.string.note_details_title)
 
         if (intent.hasExtra(EXTRA_NOTE)) {
+
             note = intent.getParcelableExtra(EXTRA_NOTE)
             binding.title.setText(note!!.title)
             binding.description.setText(note!!.description)
             binding.installTime.text = note!!.date
             val text= binding.installTime.text.toString()
+
             if (text.isNotEmpty()) {
                 getData(text)
             }
 
+
         } else {
             note = Note()
         }
+
         binding.installTime.setOnClickListener {
             if (myData.isEmpty()) {
             val calendar: Calendar = Calendar.getInstance()
@@ -115,26 +118,27 @@ class NoteDetailsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
 
     }
 
-    @SuppressLint("NonConstantResourceId")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> finish()
-            R.id.action_save -> if (binding.title.text.isNotEmpty()) {
-                note!!.title = binding.title.text.toString()
-                note!!.description = binding.description.text.toString()
-                note!!.done = false
-                note!!.timestamp = System.currentTimeMillis()
-                if (binding.installTime.text.toString() != "Время установки") {
-                    note!!.date = binding.installTime.text.toString()
-                }
-                if (intent.hasExtra(EXTRA_NOTE)) {
-                    mainViewModel?.update(note!!)
+             android.R.id.home -> finish()
+             R.id.action_save -> {
+                if (binding.title.text.isNotEmpty()) {
+                    note!!.title = binding.title.text.toString()
+                    note!!.description = binding.description.text.toString()
+                    note!!.done = false
+                    note!!.timestamp = System.currentTimeMillis()
+                    if (binding.installTime.text.toString() != "Время установки") {
+                        note!!.date = binding.installTime.text.toString()
+                    }
+                    if (intent.hasExtra(EXTRA_NOTE)) {
+                        mainViewModel?.update(note!!)
+                    } else {
+                        mainViewModel?.insert(note!!)
+                    }
+                    finish()
                 } else {
-                    mainViewModel?.insert(note!!)
+                    Toast.makeText(this, "Название не может быть пустым", Toast.LENGTH_SHORT).show()
                 }
-                finish()
-            } else {
-                Toast.makeText(this,"Название не может быть пустым",Toast.LENGTH_SHORT).show()
             }
         }
         return super.onOptionsItemSelected(item)

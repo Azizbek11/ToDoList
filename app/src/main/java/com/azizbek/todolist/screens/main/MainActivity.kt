@@ -5,18 +5,15 @@ import android.os.Handler
 import android.os.Looper
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentTransaction
 import com.azizbek.todolist.R
 import com.azizbek.todolist.screens.details.NoteDetailsActivity
-import com.azizbek.todolist.screens.main.ui.AllTasksFragment
-import com.azizbek.todolist.screens.main.ui.CompletedFragment
-import com.azizbek.todolist.screens.main.ui.ProgressFragment
+import com.azizbek.todolist.screens.main.ui.TasksFragment
+import com.azizbek.todolist.screens.main.ui.CompletedTasksFragment
+import com.azizbek.todolist.screens.main.ui.ProgressTasksFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -32,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         bottomNavigationView=findViewById(R.id.bottom_nav)
 
-        getFragment(1, AllTasksFragment())
+        getFragment(1, TasksFragment())
         fab.visibility= View.VISIBLE
         fab.setOnClickListener { NoteDetailsActivity.start(this@MainActivity, null) }
         controlBottomView()
@@ -43,17 +40,17 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.total -> {
                     topTextView?.text = "Все задачи"
-                    getFragment(1, AllTasksFragment())
+                    getFragment(1, TasksFragment())
                     fab.visibility= View.VISIBLE
                 }
                 R.id.progress -> {
                     topTextView?.text = "В прогрессе"
-                    getFragment(2, ProgressFragment())
+                    getFragment(2, ProgressTasksFragment())
                     fab.visibility= View.GONE
                 }
                 R.id.did -> {
                     topTextView?.text = "Выполненные задачи"
-                    getFragment(3, CompletedFragment())
+                    getFragment(3, CompletedTasksFragment())
                     fab.visibility= View.GONE
                 }
             }
@@ -76,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                 isPressed = true
             }
         } else {
-            getFragment(1, AllTasksFragment())
+            getFragment(1, TasksFragment())
             bottomNavigationView?.selectedItemId=R.id.total
         }
 
