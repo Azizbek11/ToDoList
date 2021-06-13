@@ -5,18 +5,18 @@
     <item
         android:id="@+id/total"
         android:icon="@drawable/all_icon"
-        android:title="Все" />
+        android:title="@string/all" />
 
     <item
         android:id="@+id/progress"
         android:icon="@drawable/progress_icon"
         android:checked="true"
-        android:title="В прогрессе" />
+        android:title="@string/progress" />
 
     <item
         android:id="@+id/did"
         android:icon="@drawable/did_icon"
-        android:title="Выполнено" />
+        android:title="@string/completedmenu" />
 
 
 </menu>

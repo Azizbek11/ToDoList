@@ -5,28 +5,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.main.MainActivity">
+    tools:context=".screens.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/applayout"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
         android:theme="@style/AppTheme.AppBarOverlay">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp">
 
-       <TextView
-           android:id="@+id/topTextView"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:text="Все задачи"
-           android:gravity="center"
-           android:textSize="18sp"
-           android:textStyle="bold"
-           android:textColor="#fff"/>
+            <TextView
+                android:id="@+id/topTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/all_tasks"
+                android:fontFamily="@font/montserrat_regular"
+                android:textStyle="bold"
+                android:layout_centerInParent="true"
+                android:textSize="18sp"
+                android:textColor="#fff"/>
+
+
+        </RelativeLayout>
+
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/frame"
         app:layout_constraintTop_toBottomOf="@id/applayout"
         android:layout_width="match_parent"
@@ -35,6 +46,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,6 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginStart="0dp"
+        android:visibility="gone"
         android:layout_marginEnd="0dp"
         app:labelVisibilityMode="labeled"
         android:background="?android:attr/windowBackground"

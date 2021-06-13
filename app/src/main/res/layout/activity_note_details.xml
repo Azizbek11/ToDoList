@@ -2,39 +2,55 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
         android:layout_width="match_parent"
+        android:background="#fff"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
         <LinearLayout
+            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:orientation="vertical">
 
-            <TextView
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Заголовок"
-                android:textSize="18sp"
-                android:layout_marginStart="10sp"
-                android:textColor="#000"
-                android:layout_marginLeft="10sp" />
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_tv"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:layout_marginStart="10sp"
+                    android:textColor="#000"
+                    android:layout_marginLeft="10sp"/>
+
+                <ImageView
+                    android:id="@+id/saveData"
+                    android:layout_width="50dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="end"
+                    android:layout_alignParentEnd="true"
+                    android:paddingEnd="15dp"
+                    android:src="@drawable/ic_baseline_done_24"
+                    android:layout_alignParentRight="true"
+                    android:paddingRight="15dp"
+                    tools:ignore="RtlSymmetry" />
+
+            </RelativeLayout>
+
 
             <EditText
-                android:id="@+id/title"
+                android:id="@+id/title_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/note_text"
                 android:minHeight="80dp"
-                android:background="#EDEAEA"
+                android:background="@drawable/edittextbac"
                 android:gravity="top"
                 android:layout_margin="10dp"
                 android:padding="16dp" />
@@ -50,20 +66,21 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Описание"
-                android:textSize="18sp"
                 android:layout_marginStart="10sp"
                 android:layout_marginEnd="10sp"
-                android:textColor="#000" />
+                android:fontFamily="@font/montserrat_medium"
+                android:text="@string/description_tv"
+                android:textColor="#000"
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="#EDEAEA"
                 android:gravity="top"
-                android:hint="@string/note_text"
+                android:background="@drawable/edittextbac"
+                android:hint="@string/note_text1"
                 android:minHeight="80dp"
                 android:padding="16dp" />
 
@@ -78,24 +95,28 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Время"
-                android:textSize="18sp"
+                android:text="@string/time_tv"
+                android:textSize="16sp"
+                android:fontFamily="@font/montserrat_medium"
                 android:layout_marginStart="10sp"
                 android:textColor="#000"
                 android:layout_marginLeft="10sp" />
 
             <TextView
-                android:background="#EDEAEA"
                 android:id="@+id/installTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="50dp"
-                android:drawablePadding="20dp"
-                android:gravity="top"
                 android:layout_margin="10sp"
+                android:background="@drawable/edittextbac"
+                android:drawablePadding="20dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="top"
+                android:text="Установить напоминание"
+                android:minHeight="50dp"
                 android:padding="16dp"
-                app:drawableStartCompat="@drawable/ic_baseline_access_time_24"
-                app:drawableLeftCompat="@drawable/ic_baseline_access_time_24" />
+                android:textColor="#000"
+                app:drawableLeftCompat="@drawable/ic_baseline_access_time_24"
+                app:drawableStartCompat="@drawable/ic_baseline_access_time_24" />
 
         </LinearLayout>
 

@@ -10,6 +10,10 @@ class Repository(private val noteDao: NoteDao) {
     val progressedTasks:LiveData<List<Note>> = noteDao.allProgressTasks()
     val completedTasks: LiveData<List<Note>> =noteDao.allCompletedTasks()
 
+    fun getById(int: Int):Note{
+       return noteDao.findById(int)
+    }
+
     suspend fun insert(note: Note){
         noteDao.insert(note)
     }

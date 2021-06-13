@@ -8,13 +8,13 @@ import com.azizbek.todolist.data.NoteDao
 class App : Application() {
     var database: AppDatabase? = null
     var noteDao: NoteDao? = null
+
     override fun onCreate() {
         super.onCreate()
         instance = this
-        database = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java, "app-db-name"
-        )
+
+        database = Room.databaseBuilder(applicationContext,
+            AppDatabase::class.java, "app-db-name")
             .build()
         noteDao = database!!.noteDao()!!
     }
