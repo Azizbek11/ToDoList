@@ -35,6 +35,8 @@ class NoteDetailsFragment : Fragment(),
     private var myMonth: Int = 0
     private var myYear: Int = 0
     var dataHave = false
+    private var isFabPressed = false
+
 
 
     override fun onCreateView(
@@ -51,8 +53,11 @@ class NoteDetailsFragment : Fragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sharedViewModel.getFabPressed().observe(viewLifecycleOwner,{
+            isFabPressed=it
+        })
         sharedViewModel.getNote().observe(viewLifecycleOwner,{
-            if (it != null) {
+            if (!isFabPressed&&it?.title?.isNotEmpty()==true) {
                 note=it
                 dataHave = true
                 title_text.setText(it.title)
@@ -86,7 +91,6 @@ class NoteDetailsFragment : Fragment(),
               saveData()
            }
     }
-
 
     private fun getData(text: String) {
 
@@ -145,7 +149,6 @@ class NoteDetailsFragment : Fragment(),
                 }
 
     }
-
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         myYear = year

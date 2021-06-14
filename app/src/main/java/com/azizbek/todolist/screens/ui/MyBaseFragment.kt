@@ -20,8 +20,7 @@ import com.azizbek.todolist.viewmodel.MainViewModel
 import com.azizbek.todolist.viewmodel.SharedViewModel
 
 
-open class MyBaseFragment(private val layout:Int):Fragment(),
-    ItemClickListener{
+open class MyBaseFragment(private val layout:Int):Fragment(){
 
     private var recyclerView:RecyclerView?=null
     private var mainViewModel: MainViewModel? = null
@@ -39,14 +38,7 @@ open class MyBaseFragment(private val layout:Int):Fragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val swipeHandler = object : SwipeToDeleteCallback(requireActivity()) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val adapter = recyclerView!!.adapter as Adapter
-                adapter.removeAt(viewHolder.adapterPosition)
-            }
-        }
-        val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+
 
         val linearLayoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
         recyclerView?.layoutManager = linearLayoutManager
@@ -54,8 +46,26 @@ open class MyBaseFragment(private val layout:Int):Fragment(),
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
 
-        adapter = Adapter(requireActivity(),mainViewModel!!, this)
+        adapter = Adapter(requireActivity(),mainViewModel!!)
         recyclerView?.adapter = adapter
+
+        val swipeHandler = object : SwipeToDeleteCallback(requireActivity()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position=viewHolder.adapterPosition
+                when(direction){
+                    ItemTouchHelper.RIGHT->{
+                        adapter.removeAt(position)
+                    }
+                    ItemTouchHelper.LEFT->{
+                        sharedViewModel?.select(adapter.getNote(position))
+                        (activity as MainActivity).getNoteFragment()
+
+                    }
+                }
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(swipeHandler)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
 
         when(layout){
             1->{
@@ -72,10 +82,5 @@ open class MyBaseFragment(private val layout:Int):Fragment(),
             }
         }
 
-    }
-
-    override fun onItemClick(v: View, position: Int) {
-        sharedViewModel?.select(adapter.getNote(position))
-        (activity as MainActivity).getNoteFragment()
     }
 }

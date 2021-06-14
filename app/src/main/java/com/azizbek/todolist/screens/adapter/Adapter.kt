@@ -19,14 +19,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
 import com.azizbek.todolist.R
 import com.azizbek.todolist.model.Note
-import com.azizbek.todolist.myInterface.ItemClickListener
 import com.azizbek.todolist.screens.adapter.Adapter.NoteViewHolder
 import com.azizbek.todolist.viewmodel.MainViewModel
 
 
-class Adapter(private  val context: Context,private val mainViewModel: MainViewModel,
-              private var itemClickListener: ItemClickListener
-): RecyclerView.Adapter<NoteViewHolder>(){
+class Adapter(private  val context: Context,private val mainViewModel: MainViewModel):
+    RecyclerView.Adapter<NoteViewHolder>(){
 
     private val sortedList: SortedList<Note> =
         SortedList(Note::class.java, object : SortedList.Callback<Note>() {
@@ -67,14 +65,14 @@ class Adapter(private  val context: Context,private val mainViewModel: MainViewM
     })
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
-        return NoteViewHolder(context,
+        return NoteViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_note_list, parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         holder.bind(sortedList[position])
-        holder.myInit(context,mainViewModel,position,sortedList[position],itemClickListener)
+        holder.myInit(context,mainViewModel,sortedList[position])
         setAnimation(holder.itemView)
     }
 
@@ -100,7 +98,7 @@ class Adapter(private  val context: Context,private val mainViewModel: MainViewM
         mainViewModel.delete(sortedList[adapterPosition])
     }
 
-    class NoteViewHolder(context:Context,itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var title: TextView = itemView.findViewById(R.id.title)
         private var time: TextView = itemView.findViewById(R.id.time)
         private var description: TextView = itemView.findViewById(R.id.myDescription)
@@ -119,20 +117,20 @@ class Adapter(private  val context: Context,private val mainViewModel: MainViewM
             time.text = note.date
             updateStrokeOut()
             silentUpdate = true
+
             if(note.date?.isNotEmpty()==true){
                 title.gravity = Gravity.BOTTOM
                 time.visibility= View.VISIBLE
             } else {
                 time.visibility=View.GONE
-                title.gravity = Gravity.CENTER_VERTICAL
-            }
+                title.gravity = Gravity.CENTER_VERTICAL }
             completed.isChecked = note.done
             description.text=note.description
+
             if (note.description?.isNotEmpty() == true) {
                 collapse.visibility=View.VISIBLE
-            } else {
-                collapse.visibility=View.INVISIBLE
-            }
+            } else { collapse.visibility=View.INVISIBLE }
+
             updateStrokeOut()
             silentUpdate = false
         }
@@ -150,12 +148,7 @@ class Adapter(private  val context: Context,private val mainViewModel: MainViewM
             }
         }
 
-        fun myInit(context: Context,mainViewModel: MainViewModel,position: Int, note: Note, action:ItemClickListener) {
-            itemView.setOnClickListener{
-                action.onItemClick(it,position)
-            }
-
-
+        fun myInit(context: Context,mainViewModel: MainViewModel, note: Note) {
 
             collapse.setOnClickListener {
                 myExpanded = note.expanded
@@ -189,9 +182,7 @@ class Adapter(private  val context: Context,private val mainViewModel: MainViewM
                 }
                 updateStrokeOut()
             }
+
         }
-
     }
-
-
 }

@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         sharedViewModel= ViewModelProvider(this).get(SharedViewModel::class.java)
         getFragment(1, 0, SplashFragment())
         fab.setOnClickListener {
-            sharedViewModel.getNull()
+            sharedViewModel.pressFab(true)
             getNoteFragment()
         }
            controlBottomView()

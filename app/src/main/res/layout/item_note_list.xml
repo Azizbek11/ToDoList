@@ -70,8 +70,10 @@
             android:text="Description"
             android:textSize="16sp"
             android:textColor="#000"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:layout_marginStart="50sp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
             android:layout_marginLeft="50sp" />
 
        </LinearLayout>
